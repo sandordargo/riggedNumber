@@ -6,6 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.Random;
 
 public class NumberDisplayer extends AppCompatActivity {
@@ -18,6 +23,7 @@ public class NumberDisplayer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(this, "ca-app-pub-2833983884268240~3778531218");
         startNewGame();
     }
 
@@ -39,6 +45,13 @@ public class NumberDisplayer extends AppCompatActivity {
                 showResult(Guess.SMALLER);
             }
         });
+
+        AdView adView = (AdView) findViewById(R.id.adViewGameStart);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.banner_home_footer));
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        adView.loadAd(adRequest);
     }
 
     private void showResult(Guess guess) {
@@ -65,6 +78,13 @@ public class NumberDisplayer extends AppCompatActivity {
         });
 
         letTheUserWin = !letTheUserWin;
+
+        AdView adView = (AdView) findViewById(R.id.adViewGameResult);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(getString(R.string.banner_home_footer));
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        adView.loadAd(adRequest);
     }
 
     private int generateWinningNumber(Guess guess) {

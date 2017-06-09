@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">RiggedNumber</string>
+    <string name="app_name">Rigged</string>
     <string name="instruction">Will the number be smaller or greater than 5?</string>
     <string name="winner">Congrats, you won!</string>
     <string name="loser">Sorry, you missed it this time!</string>
+    <string name="banner_home_footer">ca-app-pub-2833983884268240/5255264412</string>
 </resources>
