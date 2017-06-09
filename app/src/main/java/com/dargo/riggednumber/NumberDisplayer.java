@@ -42,20 +42,16 @@ public class NumberDisplayer extends AppCompatActivity {
 
     private void showResult(Guess guess) {
         setContentView(R.layout.game_result);
+        int randomNumber = generateRandomNumber();
+
         TextView randomNumberText = (TextView) findViewById(R.id.riggedNumber);
-        Random randomGenerator = new Random();
-        int randomNumber = randomGenerator.nextInt(9) + 1;
         randomNumberText.setText(String.valueOf(randomNumber));
-        String notificationMessage = "";
-        if ((guess.equals(Guess.SMALLER) && randomNumber < 5) || (guess.equals(Guess.GREATER) && randomNumber > 5)) {
-            notificationMessage = getString(R.string.winner);
-        } else {
-            notificationMessage = getString(R.string.loser);
-        }
+
+        String notificationMessage = hasGuessWon(guess, randomNumber) ?
+                getString(R.string.winner) : getString(R.string.loser);
 
         TextView notification = (TextView) findViewById(R.id.notification);
         notification.setText(notificationMessage);
-
 
         newGameButton = (Button) findViewById(R.id.newGameButton);
         newGameButton.setOnClickListener(new View.OnClickListener() {
@@ -64,5 +60,18 @@ public class NumberDisplayer extends AppCompatActivity {
                 startNewGame();
             }
         });
+    }
+
+    private static int generateRandomNumber() {
+        Random randomGenerator = new Random();
+        int randomNumber = randomGenerator.nextInt(9) + 1;
+        while (randomNumber == 5) {
+            randomNumber = randomGenerator.nextInt(9) + 1;
+        }
+        return randomNumber;
+    }
+
+    private static boolean hasGuessWon(Guess guess, int randomNumber) {
+        return (guess.equals(Guess.SMALLER) && randomNumber < 5) || (guess.equals(Guess.GREATER) && randomNumber > 5);
     }
 }
