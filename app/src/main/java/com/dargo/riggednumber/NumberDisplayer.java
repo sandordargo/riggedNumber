@@ -13,6 +13,7 @@ public class NumberDisplayer extends AppCompatActivity {
     Button greaterButton;
     Button smallerButton;
     Button newGameButton;
+    boolean letTheUserWin = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +43,18 @@ public class NumberDisplayer extends AppCompatActivity {
 
     private void showResult(Guess guess) {
         setContentView(R.layout.game_result);
-        int randomNumber = generateRandomNumber();
+        int randomNumber;
+        String notificationMessage;
 
-        TextView randomNumberText = (TextView) findViewById(R.id.riggedNumber);
-        randomNumberText.setText(String.valueOf(randomNumber));
+        if (letTheUserWin) {
+            notificationMessage = getString(R.string.winner);
+            randomNumber = generateWinningNumber(guess);
+        } else {
+            notificationMessage = getString(R.string.loser);
+            randomNumber = generateLosingNumber(guess);
+        }
 
-        String notificationMessage = hasGuessWon(guess, randomNumber) ?
-                getString(R.string.winner) : getString(R.string.loser);
-
-        TextView notification = (TextView) findViewById(R.id.notification);
-        notification.setText(notificationMessage);
+        setNotificationFields(randomNumber, notificationMessage);
 
         newGameButton = (Button) findViewById(R.id.newGameButton);
         newGameButton.setOnClickListener(new View.OnClickListener() {
@@ -60,18 +63,35 @@ public class NumberDisplayer extends AppCompatActivity {
                 startNewGame();
             }
         });
+
+        letTheUserWin = !letTheUserWin;
     }
 
-    private static int generateRandomNumber() {
+    private int generateWinningNumber(Guess guess) {
+        return guess.equals(Guess.GREATER) ?
+                generateRandomNumberBetween6And9() : generateRandomNumberBetween1And4();
+    }
+
+    private int generateLosingNumber(Guess guess) {
+        return guess.equals(Guess.GREATER) ?
+                generateRandomNumberBetween1And4() : generateRandomNumberBetween6And9();
+    }
+
+    private static int generateRandomNumberBetween1And4() {
         Random randomGenerator = new Random();
-        int randomNumber = randomGenerator.nextInt(9) + 1;
-        while (randomNumber == 5) {
-            randomNumber = randomGenerator.nextInt(9) + 1;
-        }
-        return randomNumber;
+        return randomGenerator.nextInt(4) + 1;
     }
 
-    private static boolean hasGuessWon(Guess guess, int randomNumber) {
-        return (guess.equals(Guess.SMALLER) && randomNumber < 5) || (guess.equals(Guess.GREATER) && randomNumber > 5);
+    private static int generateRandomNumberBetween6And9() {
+        Random randomGenerator = new Random();
+        return randomGenerator.nextInt(4) + 6;
+    }
+
+    private void setNotificationFields(int randomNumber, String notificationMessage) {
+        TextView randomNumberText = (TextView) findViewById(R.id.riggedNumber);
+        randomNumberText.setText(String.valueOf(randomNumber));
+
+        TextView notification = (TextView) findViewById(R.id.notification);
+        notification.setText(notificationMessage);
     }
 }
